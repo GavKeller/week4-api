@@ -1,0 +1,107 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  color: #222;
+}
+
+.navbar {
+  background-color: #222;
+  color: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar h2 {
+  margin: 0;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-weight: bold;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.page {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+}
+
+.info-box {
+  background-color: #eeeeee;
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 6px;
+}
+
+.order-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.order-card {
+  background-color: #fafafa;
+  padding: 18px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.order-card h2 {
+  margin-top: 0;
+}
+
+button {
+  background-color: #222;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #444;
+}
+
+.order-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+}
+
+.order-form label {
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+.order-form input,
+.order-form textarea {
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #bbb;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.order-form textarea {
+  min-height: 90px;
+}
+
+.order-form button {
+  margin-top: 20px;
+}
