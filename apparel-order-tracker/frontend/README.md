@@ -1,16 +1,113 @@
-# React + Vite
+# Apparel Order Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+## About the Project
 
-Currently, two official plugins are available:
+For my final project, I made an Apparel Order Tracker.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The purpose of the app is to make it easier to keep track of clothing orders in one place. Instead of writing orders down or trying to keep track of them through messages, the user can enter the customer name, item, size, quantity, and status of the order.
 
-## React Compiler
+This app could be useful for a small business, school club, fraternity, team, or anyone else who has to manage a lot of apparel orders.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the Oxlint configuration
+The app allows users to:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+- Add a new order
+- View all saved orders
+- Edit an existing order
+- Delete an order
+- Change the status of an order
+- Save orders in a SQLite database
+- Keep the information saved even after restarting the server
+
+## Technologies Used
+
+### Frontend
+
+- React
+- JavaScript
+- CSS
+- Vite
+
+### Backend
+
+- Node.js
+- Express
+- SQLite
+- CORS
+
+## How the App Works
+
+The frontend was made with React, and the backend was made with Express.
+
+The frontend sends requests to the backend whenever the user adds, edits, deletes, or views an order.
+
+The backend then communicates with the SQLite database to save or retrieve the information.
+
+The app includes all four CRUD operations:
+
+- Create: Add a new order
+- Read: View the saved orders
+- Update: Change an existing order
+- Delete: Remove an order
+
+## Database
+
+The app uses a SQLite database called `orders.db`.
+
+The database has one table called `orders`.
+
+The table includes:
+
+- `id`
+- `customerName`
+- `itemName`
+- `size`
+- `quantity`
+- `status`
+
+The `id` is the primary key, which means every order has its own unique number.
+
+## API Routes
+
+### Get all orders
+
+`GET /api/orders`
+
+This gets all of the orders saved in the database.
+
+### Get one order
+
+`GET /api/orders/:id`
+
+This gets one specific order based on its order number.
+
+### Create an order
+
+`POST /api/orders`
+
+This adds a new order to the database.
+
+### Update an order
+
+`PUT /api/orders/:id`
+
+This changes an order that is already saved.
+
+### Delete an order
+
+`DELETE /api/orders/:id`
+
+This removes an order from the database.
+
+## How to Run the Project
+
+### Start the Backend
+
+Open a terminal and run:
+
+```bash
+cd apparel-order-tracker
+cd backend
+npm install
+node server.js
