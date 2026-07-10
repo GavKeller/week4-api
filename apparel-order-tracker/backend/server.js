@@ -1,3 +1,4 @@
+// Imports everything the backend needs.
 const express = require("express");
 const cors = require("cors");
 const sqlite3 = require("sqlite3").verbose();
@@ -6,11 +7,13 @@ const path = require("path");
 const app = express();
 const PORT = 3000;
 
+// Lets the frontend talk to the backend.
 app.use(cors());
 app.use(express.json());
 
 const databasePath = path.join(__dirname, "orders.db");
 
+// Connects to the SQLite database.
 const db = new sqlite3.Database(databasePath, (error) => {
   if (error) {
     console.error("Database connection error:", error.message);
@@ -19,6 +22,7 @@ const db = new sqlite3.Database(databasePath, (error) => {
   }
 });
 
+// Creates the orders table if it doesn't exist.
 db.run(`
   CREATE TABLE IF NOT EXISTS orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,12 +34,14 @@ db.run(`
   )
 `);
 
+// Home route just to test the server.
 app.get("/", (req, res) => {
   res.json({
     message: "Welcome to the Apparel Order Tracker API"
   });
 });
 
+// GET - Gets all orders.
 app.get("/api/orders", (req, res) => {
   const sql = "SELECT * FROM orders ORDER BY id DESC";
 
@@ -50,6 +56,7 @@ app.get("/api/orders", (req, res) => {
   });
 });
 
+// GET - Gets one order by its ID.
 app.get("/api/orders/:id", (req, res) => {
   const sql = "SELECT * FROM orders WHERE id = ?";
 
@@ -60,6 +67,7 @@ app.get("/api/orders/:id", (req, res) => {
       });
     }
 
+    // Makes sure the order exists.
     if (!row) {
       return res.status(404).json({
         error: "Order not found."
@@ -70,6 +78,7 @@ app.get("/api/orders/:id", (req, res) => {
   });
 });
 
+// POST - Adds a new order.
 app.post("/api/orders", (req, res) => {
   const {
     customerName,
@@ -79,6 +88,7 @@ app.post("/api/orders", (req, res) => {
     status = "Pending"
   } = req.body;
 
+  // Makes sure required fields aren't empty.
   if (!customerName || !itemName || !size) {
     return res.status(400).json({
       error: "Customer name, item name, and size are required."
@@ -87,6 +97,7 @@ app.post("/api/orders", (req, res) => {
 
   const numericQuantity = Number(quantity);
 
+  // Makes sure the quantity is valid.
   if (!Number.isInteger(numericQuantity) || numericQuantity < 1) {
     return res.status(400).json({
       error: "Quantity must be a whole number greater than zero."
@@ -99,6 +110,7 @@ app.post("/api/orders", (req, res) => {
     VALUES (?, ?, ?, ?, ?)
   `;
 
+  // Saves the new order to the database.
   db.run(
     sql,
     [customerName, itemName, size, numericQuantity, status],
@@ -109,6 +121,7 @@ app.post("/api/orders", (req, res) => {
         });
       }
 
+      // Sends the new order back to the frontend.
       db.get(
         "SELECT * FROM orders WHERE id = ?",
         [this.lastID],
@@ -126,6 +139,7 @@ app.post("/api/orders", (req, res) => {
   );
 });
 
+// PUT - Updates an existing order.
 app.put("/api/orders/:id", (req, res) => {
   const {
     customerName,
@@ -135,6 +149,7 @@ app.put("/api/orders/:id", (req, res) => {
     status
   } = req.body;
 
+  // Makes sure all fields are filled out.
   if (
     !customerName ||
     !itemName ||
@@ -149,6 +164,7 @@ app.put("/api/orders/:id", (req, res) => {
 
   const numericQuantity = Number(quantity);
 
+  // Makes sure the quantity is valid.
   if (!Number.isInteger(numericQuantity) || numericQuantity < 1) {
     return res.status(400).json({
       error: "Quantity must be a whole number greater than zero."
@@ -165,6 +181,7 @@ app.put("/api/orders/:id", (req, res) => {
     WHERE id = ?
   `;
 
+  // Updates the order in the database.
   db.run(
     sql,
     [
@@ -182,12 +199,14 @@ app.put("/api/orders/:id", (req, res) => {
         });
       }
 
+      // Makes sure the order exists.
       if (this.changes === 0) {
         return res.status(404).json({
           error: "Order not found."
         });
       }
 
+      // Sends the updated order back.
       db.get(
         "SELECT * FROM orders WHERE id = ?",
         [req.params.id],
@@ -205,9 +224,11 @@ app.put("/api/orders/:id", (req, res) => {
   );
 });
 
+// DELETE - Removes an order.
 app.delete("/api/orders/:id", (req, res) => {
   const sql = "DELETE FROM orders WHERE id = ?";
 
+  // Deletes the order from the database.
   db.run(sql, [req.params.id], function (error) {
     if (error) {
       return res.status(500).json({
@@ -215,6 +236,7 @@ app.delete("/api/orders/:id", (req, res) => {
       });
     }
 
+    // Makes sure the order exists.
     if (this.changes === 0) {
       return res.status(404).json({
         error: "Order not found."
@@ -227,12 +249,14 @@ app.delete("/api/orders/:id", (req, res) => {
   });
 });
 
+// Handles routes that don't exist.
 app.use((req, res) => {
   res.status(404).json({
     error: "Route not found."
   });
 });
 
+// Starts the backend server.
 app.listen(PORT, () => {
   console.log(`Backend server running at http://localhost:${PORT}`);
 });
